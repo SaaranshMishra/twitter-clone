@@ -1,31 +1,29 @@
 const express = require('express');
 const cors = require('cors');
-const monk = require('monk');
+const Datastore = require('nedb');
 const Filter = require('bad-words');
 const rateLimit = require('express-rate-limit');
 
 const app = express();
 
-const db = monk(process.env.MONGO_URI || 'localhost/roarer');
-const roars = db.get('roars');
+const roars = new Datastore('database.db');
+roars.loadDatabase();
+
 const filter = new Filter();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static('public'));
 
-
-// app.get('/', (req, res) => {
-// 	res.json({
-// 		message: 'ROAR!!'
-// 	});
-// });
-
-app.get('/', (req, res) => {
-	roars
-		.find()
-		.then(roars => {
-			res.json(roars);
-		});
+app.get('/api', (req, res) => {
+	roars.find({}).sort({created: -1}).exec((err, roars) => {
+		if (err) throw err;
+		res.json(roars);
+	});
+	// roars.find({}, (err, roars) => {
+	// 	if (err) throw err;
+	// 	res.json(roars);
+	// });
 });
 
 function isValidRoar(roar) {
@@ -38,7 +36,7 @@ app.use(rateLimit({
 	max: 100 // upto 100 requests for every 15 minutes
 }));
 
-app.post('/', (req, res) => {
+app.post('/api', (req, res) => {
 	if(isValidRoar(req.body)) {
 		// Enter into DB
 		const roar = {
@@ -48,8 +46,7 @@ app.post('/', (req, res) => {
 		};
 
 		roars
-			.insert(roar)
-			.then(createdRoar => {
+			.insert(roar, (err, createdRoar) => {
 				res.json(createdRoar);
 			});
 
@@ -63,5 +60,5 @@ app.post('/', (req, res) => {
 
 port = process.env.PORT || 5000;
 app.listen(port, () => {
-	console.log(`Listening on PORT {port}`);
+	console.log(`Listening on PORT ${port}`);
 });

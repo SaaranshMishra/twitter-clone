@@ -1,7 +1,7 @@
 const form = document.querySelector('form');
 const loadingElement = document.querySelector('.loading');
 const roarsElement = document.querySelector('.roars');
-const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:5000/' : 'https://roar-twitter-api.herokuapp.com/';
+const API_URL = '/api';
 
 loadingElement.style.display = '';
 
@@ -18,6 +18,7 @@ form.addEventListener('submit', (event) => {
 		name,
 		content
 	};
+
 	form.style.display = 'none';
 	loadingElement.style.display = '';
 	
@@ -25,15 +26,13 @@ form.addEventListener('submit', (event) => {
 		method: 'POST',
 		body: JSON.stringify(roar),
 		headers: {
-			'content-type': 'application/json'
+			'Content-Type': 'application/json'
 		}
 	}).then(response => response.json())
 	  .then(createdRoar => {
-	  	console.log(createdRoar);
 	  	form.reset();
 	  	form.style.display = '';
 	  	listAllRoars();
-	  	// loadingElement.style.display = 'none';
 	  });
 });
 
@@ -42,8 +41,7 @@ function listAllRoars() {
 	fetch(API_URL)
 		.then(response => response.json())
 		.then(roars => {
-			// console.log(roars);
-			roars.reverse();
+			// roars.reverse();
 			roars.forEach(roar => {
 				const div = document.createElement('div');
 
