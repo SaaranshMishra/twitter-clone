@@ -20,10 +20,6 @@ app.get('/api', (req, res) => {
 		if (err) throw err;
 		res.json(roars);
 	});
-	// roars.find({}, (err, roars) => {
-	// 	if (err) throw err;
-	// 	res.json(roars);
-	// });
 });
 
 function isValidRoar(roar) {

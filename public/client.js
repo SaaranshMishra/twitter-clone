@@ -41,7 +41,6 @@ function listAllRoars() {
 	fetch(API_URL)
 		.then(response => response.json())
 		.then(roars => {
-			// roars.reverse();
 			roars.forEach(roar => {
 				const div = document.createElement('div');
 
