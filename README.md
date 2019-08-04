@@ -7,6 +7,8 @@ With the following features:
 * Monsters can send a roar
 * Monsters can see all roars that have been sent
 
+The live demo can be viewed [here](https://roar-twitter-clone.herokuapp.com/)
+
 ## Objectives
 
 * [ ]  Get user input on the Client
